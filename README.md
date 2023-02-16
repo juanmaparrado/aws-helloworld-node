@@ -11,7 +11,7 @@ cd ~/.nvm
 nvm install --lts
 cd /home/ubuntu
 mkdir logs
-curl -sL https://github.com/AlfonsoJBR/aws-helloworld-node/archive/master.zip --output master.zip
+curl -sL https://github.com/juanmaparrado/aws-helloworld-node/archive/master.zip --output master.zip
 apt-get install zip
 unzip master
 mv nomfichero /app
