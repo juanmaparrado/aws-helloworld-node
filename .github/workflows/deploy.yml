@@ -1,0 +1,43 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [Test]
+    types: [completed]
+
+env:
+  AWS_REGION: us-east-1
+  S3BUCKET: webserver-setup-us-east-1-codepipeline-183224015637
+
+jobs:
+  deploy:
+    name: Build and test
+    runs-on: ubuntu-20.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      id-token: write
+    steps:
+    - name: Checkout codigo 
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    #- name: Setup node
+    #  uses: actions/setup-node@v3
+    #  with:
+    #    node-version: lts/*
+
+    #- name: Instalar
+    #  run: npm ci
+    #- name: Copiar a S3
+    #  run: |
+    #    aws s3 sync . s3://${{ env.S3BUCKET}}
+    - name: Desplegar con codedeploy
+      run: |
+        aws deploy create-deployment --application-name NodeWebServer --deployment-group-name production --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
