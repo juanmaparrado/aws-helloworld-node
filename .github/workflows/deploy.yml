@@ -23,6 +23,4 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: us-east-1
 
-    - name: codedeploy
-      run: |
-        aws deploy create-deployment --application-name WebServerTest--deployment-group-name production --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+   
